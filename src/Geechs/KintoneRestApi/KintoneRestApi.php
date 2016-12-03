@@ -27,11 +27,10 @@ class KintoneRestApi{
 				'apiList'  => 'apis',
 			];
 
-	public function __construct($api_token_key = null)
+	public function __construct()
 	{
 		$request =  new Request(Config::get('kintone-rest-api.auth_default'),
-						Config::get('kintone-rest-api.subdomain'),
-						$api_token_key);
+						Config::get('kintone-rest-api.subdomain'));
 		$this->request = $request;
 	}
 
