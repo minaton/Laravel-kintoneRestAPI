@@ -14,7 +14,7 @@ class Request {
 	private $status_code = '';
 	private $data = [];
 
-	public function __construct($auth_default, $subdomain)
+	public function __construct($auth_default, $subdomain, $api_token_key = null)
 	{
 		$url = str_replace('{subdomain}', $subdomain, self::API_BASE_URL);
 		$url = str_replace('{version}', self::VERSION, $url);
@@ -33,14 +33,18 @@ class Request {
 		return $this->data;
 	}
 
-	private function setAuth($auth_default)
+	private function setAuth($auth_default, $api_token_key = null)
 	{
 		if ($auth_default == 'user_pass_auth') {
 			$user_pass = Config::get('kintone-rest-api.authentications.user_pass.user'). ':'.
 							Config::get('kintone-rest-api.authentications.user_pass.pass');
 			$this->hashed_user_pass = base64_encode($user_pass);
 		} elseif ($auth_default == 'api_token_auth') {
-			$this->api_token = Config::get('kintone-rest-api.authentications.api_token.api_token');
+			if (empty($api_token_key)) {
+				$this->api_token = Config::get('kintone-rest-api.authentications.api_token.api_token');
+			} else {
+				$this->api_token = Config::get('kintone-rest-api.authentications.api_token.'. $api_token_key);
+			}
 		}
 	}
 
